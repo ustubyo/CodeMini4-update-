@@ -2,16 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     public float speed;
+    public GameObject Lifetext;
+    public GameObject gemtext;
+    public GameObject timetext;
 
     float Maxjump = 1f;
     float xlimit = 4.7f;
     float zlimit = -4.7f;
     float newzlimit = 14.7f;
     float newxlimit = 3.2f;
+
+    int totallife = 3;
+    int totalgemcount;
     bool defplane = false;
     bool groundA = false;
     public Animator PlayerAni;
@@ -26,8 +33,17 @@ public class PlayerController : MonoBehaviour
     {
         Movement();
         JumpPlayer();
+        //FInd Gameobject name Diamond
+        totalgemcount = GameObject.FindGameObjectsWithTag("Diamond").Length;
+        gemtext.GetComponent<Text>().text = "Gem Remaining: " + totalgemcount;
+        Lifetext.GetComponent<Text>().text = "Life : " + totallife;
+        if(transform.position.y < -5f)
+        {
+            transform.position = new Vector3(0, 0.83f, 0);
+            totallife -= 1;
+        }
 
-        if (transform.position.y < -7f)
+        if (totallife == 0)
         {
             //Getting pushed to out of bound limit will render player to a lose scene
             SceneManager.LoadScene("LoseScene");
